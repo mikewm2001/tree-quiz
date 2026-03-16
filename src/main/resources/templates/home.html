@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TreeQuiz — Discover Your Tree Personality</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Personality Quiz</div>
+            <h1 class="hero-title">Which tree are you?</h1>
+            <p class="hero-subtitle">
+                Answer 20 questions and discover the tree that mirrors your personality —
+                your strengths, your spirit, and who you grow best alongside.
+            </p>
+            <a th:href="@{/quiz}" class="btn btn-primary btn-large">Begin the Quiz</a>
+            <a th:href="@{/trees}" class="btn btn-secondary">Explore All Trees</a>
+        </div>
+        <div class="hero-visual">
+            <div class="tree-silhouette">
+                <div class="silhouette-canopy"></div>
+                <div class="silhouette-trunk"></div>
+                <div class="silhouette-roots"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature cards -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">How it works</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3>Answer 20 questions</h3>
+                    <p>Honest, thoughtful questions about how you live, connect, and grow.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3>Discover your tree</h3>
+                    <p>Your answers reveal one of 10 unique tree personalities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3>Understand your matches</h3>
+                    <p>See which trees you thrive alongside — and which ones create tension.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tree preview strip -->
+    <section class="tree-strip">
+        <div class="container">
+            <h2 class="section-title">10 tree personalities await</h2>
+            <div class="strip-grid">
+                <div class="strip-item">
+                    <span class="strip-name">Oak</span>
+                    <span class="strip-subtitle">The Steady Guardian</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Maple</span>
+                    <span class="strip-subtitle">The Warm Creative</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Willow</span>
+                    <span class="strip-subtitle">The Gentle Dreamer</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Pine</span>
+                    <span class="strip-subtitle">The Quiet Survivor</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Birch</span>
+                    <span class="strip-subtitle">The Fresh Start</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Redwood</span>
+                    <span class="strip-subtitle">The Quiet Giant</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Cherry Blossom</span>
+                    <span class="strip-subtitle">The Joyful Romantic</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Cedar</span>
+                    <span class="strip-subtitle">The Calm Protector</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Aspen</span>
+                    <span class="strip-subtitle">The Lively Connector</span>
+                </div>
+                <div class="strip-item">
+                    <span class="strip-name">Bonsai</span>
+                    <span class="strip-subtitle">The Intentional Thinker</span>
+                </div>
+            </div>
+            <div class="strip-cta">
+                <a th:href="@{/quiz}" class="btn btn-primary">Find My Tree</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>TreeQuiz &mdash; Rooted in personality.</p>
+    </div>
+</footer>
+
+</body>
+</html>
