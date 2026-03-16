@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TreeQuiz — Tree Directory</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main>
+    <section class="dir-section">
+        <div class="container">
+
+            <div class="dir-header">
+                <h1>The 10 Tree Personalities</h1>
+                <p>Each tree represents a distinct way of moving through the world.
+                    Which one speaks to you?</p>
+            </div>
+
+            <div class="dir-grid">
+                <div class="dir-card"
+                     th:each="tree : ${trees}"
+                     th:style="|border-top: 4px solid ${tree.accentColor}|">
+
+                    <div class="dir-card-header">
+                        <span class="dir-accent-bar"
+                              th:style="|background: ${tree.accentColor}|"></span>
+                        <div>
+                            <h2 class="dir-tree-name"
+                                th:text="${tree.displayName}"
+                                th:style="|color: ${tree.accentColor}|">Oak</h2>
+                            <p class="dir-tree-title" th:text="${tree.title}">The Steady Guardian</p>
+                        </div>
+                    </div>
+
+                    <p class="dir-description" th:text="${tree.description}">Description.</p>
+
+                    <div class="dir-traits">
+                        <span class="trait-badge trait-badge-sm"
+                              th:each="trait : ${tree.traits}"
+                              th:text="${trait}"
+                              th:style="|border-color: ${tree.accentColor}; color: ${tree.accentColor}|">
+                            Trait
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dir-cta">
+                <a th:href="@{/quiz}" class="btn btn-primary">Take the Quiz</a>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>TreeQuiz &mdash; Rooted in personality.</p>
+    </div>
+</footer>
+
+</body>
+</html>

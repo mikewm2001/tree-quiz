@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TreeQuiz — The Quiz</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main>
+    <section class="quiz-section">
+        <div class="container container-narrow">
+
+            <div class="quiz-header">
+                <h1>Discover Your Tree</h1>
+                <p class="quiz-intro">Answer all 20 questions as honestly as you can.
+                    There are no right or wrong answers — only your truth.</p>
+            </div>
+
+            <!-- Validation error banner -->
+            <div th:if="${error}" class="error-banner">
+                <span th:text="${error}"></span>
+            </div>
+
+            <form id="quizForm"
+                  th:action="@{/quiz/submit}"
+                  th:object="${form}"
+                  method="post"
+                  novalidate>
+
+                <div class="question-card"
+                     th:each="question, stat : ${questions}"
+                     th:id="|q${question.orderIndex}|">
+
+                    <div class="question-number">
+                        Question <span th:text="${stat.index + 1}">1</span>
+                        <span class="question-total">/ 20</span>
+                    </div>
+
+                    <h2 class="question-prompt" th:text="${question.prompt}">Prompt</h2>
+
+                    <div class="answer-options">
+                        <label class="answer-label"
+                               th:each="option : ${question.answerOptions}">
+                            <input type="radio"
+                                   th:name="|answers[${question.orderIndex}]|"
+                                   th:value="${option.optionLabel}"
+                                   th:checked="${form.answers[question.orderIndex] == option.optionLabel}"
+                                   class="answer-radio"/>
+                            <span class="answer-letter" th:text="${option.optionLabel}">A</span>
+                            <span class="answer-text" th:text="${option.optionText}">Option text</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-submit-area">
+                    <p class="submit-hint" id="submitHint" style="display:none;">
+                        Please answer all questions before submitting.
+                    </p>
+                    <button type="submit" class="btn btn-primary btn-large" id="submitBtn">
+                        Reveal My Tree
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>TreeQuiz &mdash; Rooted in personality.</p>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('quizForm').addEventListener('submit', function (e) {
+        const totalQuestions = 20;
+        const answered = new Set(
+            [...document.querySelectorAll('input[type="radio"]:checked')]
+                .map(el => el.name)
+        );
+        if (answered.size < totalQuestions) {
+            e.preventDefault();
+            document.getElementById('submitHint').style.display = 'block';
+            // Scroll to first unanswered question
+            for (let i = 1; i <= totalQuestions; i++) {
+                const name = 'answers[' + i + ']';
+                if (!answered.has(name)) {
+                    const el = document.querySelector('input[name="' + name + '"]');
+                    if (el) el.closest('.question-card').scrollIntoView({behavior: 'smooth', block: 'center'});
+                    break;
+                }
+            }
+        }
+    });
+
+    // Hide hint once user starts answering
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.getElementById('submitHint').style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>

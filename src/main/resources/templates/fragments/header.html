@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header">
+    <nav class="navbar">
+        <a class="navbar-brand" th:href="@{/}">
+            <span class="brand-leaf">&#9752;</span> TreeQuiz
+        </a>
+        <div class="navbar-links">
+            <a th:href="@{/quiz}" class="nav-link">Take the Quiz</a>
+            <a th:href="@{/trees}" class="nav-link">Tree Directory</a>
+        </div>
+    </nav>
+</header>
+</body>
+</html>

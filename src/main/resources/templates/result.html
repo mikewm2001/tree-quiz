@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="|TreeQuiz — You are ${personality.displayName}|">TreeQuiz — Result</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+<main>
+
+    <!-- Result hero -->
+    <section class="result-hero" th:style="|border-top: 6px solid ${personality.accentColor}|">
+        <div class="container container-narrow">
+            <p class="result-label">Your tree personality</p>
+            <h1 class="result-tree-name" th:text="${personality.displayName}"
+                th:style="|color: ${personality.accentColor}|">Oak</h1>
+            <p class="result-title" th:text="${personality.title}">The Steady Guardian</p>
+        </div>
+    </section>
+
+    <div class="container container-narrow result-body">
+
+        <!-- Description -->
+        <div class="result-card">
+            <p class="result-description" th:text="${personality.description}">Description goes here.</p>
+        </div>
+
+        <!-- Traits -->
+        <div class="result-card">
+            <h2 class="result-section-title">Your traits</h2>
+            <div class="trait-list">
+                <span class="trait-badge"
+                      th:each="trait : ${personality.traits}"
+                      th:text="${trait}"
+                      th:style="|border-color: ${personality.accentColor}; color: ${personality.accentColor}|">
+                    Trait
+                </span>
+            </div>
+        </div>
+
+        <!-- Compatibility -->
+        <div class="result-compat-grid">
+
+            <div class="result-card compat-card compat-best">
+                <h2 class="result-section-title compat-title compat-title-best">Best matches</h2>
+                <p class="compat-hint">Trees you thrive alongside</p>
+                <div class="compat-list">
+                    <div class="compat-item"
+                         th:each="match : ${bestMatches}">
+                        <span class="compat-dot compat-dot-best"
+                              th:style="|background: ${match.accentColor}|"></span>
+                        <div>
+                            <span class="compat-name" th:text="${match.displayName}">Oak</span>
+                            <span class="compat-subtitle" th:text="${match.title}">The Steady Guardian</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card compat-card compat-worst">
+                <h2 class="result-section-title compat-title compat-title-worst">Challenging matches</h2>
+                <p class="compat-hint">Trees where differences run deep</p>
+                <div class="compat-list">
+                    <div class="compat-item"
+                         th:each="match : ${worstMatches}">
+                        <span class="compat-dot compat-dot-worst"></span>
+                        <div>
+                            <span class="compat-name" th:text="${match.displayName}">Oak</span>
+                            <span class="compat-subtitle" th:text="${match.title}">The Steady Guardian</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="result-actions">
+            <a th:href="@{/quiz}" class="btn btn-primary">Retake the Quiz</a>
+            <a th:href="@{/trees}" class="btn btn-secondary">Explore All Trees</a>
+        </div>
+
+    </div>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>TreeQuiz &mdash; Rooted in personality.</p>
+    </div>
+</footer>
+
+</body>
+</html>
