@@ -1,7 +1,9 @@
 package com.example.treequiz.controller;
 
 import com.example.treequiz.entity.Question;
+import com.example.treequiz.entity.QuizResult;
 import com.example.treequiz.entity.enums.TreeType;
+import com.example.treequiz.repository.QuizResultRepository;
 import com.example.treequiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -19,6 +22,7 @@ import java.util.List;
 public class QuizController {
 
     private final QuizService quizService;
+    private final QuizResultRepository quizResultRepository;
 
     @GetMapping
     public String showQuiz(Model model) {
@@ -45,6 +49,12 @@ public class QuizController {
         }
 
         TreeType result = quizService.calculateResult(form.getAnswers());
+
+        quizResultRepository.save(QuizResult.builder()
+            .resultingTree(result)
+            .timestamp(LocalDateTime.now())
+            .build());
+
         return "redirect:/result?tree=" + result.name();
     }
 }
