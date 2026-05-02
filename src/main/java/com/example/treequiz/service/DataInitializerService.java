@@ -35,9 +35,15 @@ public class DataInitializerService implements ApplicationRunner {
         if (treePersonalityRepository.count() == 0) {
             log.info("Seeding tree personality data...");
             seedTreePersonalities();
-            seedTreeCompatibilities();
             log.info("Tree personality data seeded.");
         }
+
+        long deleted = treeCompatibilityRepository.count();
+        treeCompatibilityRepository.deleteAllInBatch();
+        seedTreeCompatibilities();
+        long created = treeCompatibilityRepository.count();
+        log.info("Compatibility mappings refreshed: {} deleted, {} recreated.", deleted, created);
+
         if (questionRepository.count() == 0) {
             log.info("Seeding quiz questions...");
             seedQuestions();
@@ -150,66 +156,66 @@ public class DataInitializerService implements ApplicationRunner {
 
     private void seedTreeCompatibilities() {
         treeCompatibilityRepository.saveAll(List.of(
-            // OAK
+            // OAK — best: CEDAR, REDWOOD, BONSAI | worst: ASPEN, CHERRY_BLOSSOM
             compat(TreeType.OAK, TreeType.CEDAR,          CompatibilityType.BEST),
             compat(TreeType.OAK, TreeType.REDWOOD,        CompatibilityType.BEST),
-            compat(TreeType.OAK, TreeType.MAPLE,          CompatibilityType.BEST),
+            compat(TreeType.OAK, TreeType.BONSAI,         CompatibilityType.BEST),
             compat(TreeType.OAK, TreeType.ASPEN,          CompatibilityType.WORST),
             compat(TreeType.OAK, TreeType.CHERRY_BLOSSOM, CompatibilityType.WORST),
-            // MAPLE
+            // MAPLE — best: ASPEN, CHERRY_BLOSSOM, BIRCH | worst: BONSAI, CEDAR
             compat(TreeType.MAPLE, TreeType.ASPEN,          CompatibilityType.BEST),
             compat(TreeType.MAPLE, TreeType.CHERRY_BLOSSOM, CompatibilityType.BEST),
             compat(TreeType.MAPLE, TreeType.BIRCH,          CompatibilityType.BEST),
             compat(TreeType.MAPLE, TreeType.BONSAI,         CompatibilityType.WORST),
-            compat(TreeType.MAPLE, TreeType.REDWOOD,        CompatibilityType.WORST),
-            // WILLOW
+            compat(TreeType.MAPLE, TreeType.CEDAR,          CompatibilityType.WORST),
+            // WILLOW — best: CHERRY_BLOSSOM, CEDAR, BONSAI | worst: REDWOOD, BIRCH
             compat(TreeType.WILLOW, TreeType.CHERRY_BLOSSOM, CompatibilityType.BEST),
             compat(TreeType.WILLOW, TreeType.CEDAR,          CompatibilityType.BEST),
             compat(TreeType.WILLOW, TreeType.BONSAI,         CompatibilityType.BEST),
-            compat(TreeType.WILLOW, TreeType.ASPEN,          CompatibilityType.WORST),
-            compat(TreeType.WILLOW, TreeType.OAK,            CompatibilityType.WORST),
-            // PINE
+            compat(TreeType.WILLOW, TreeType.REDWOOD,        CompatibilityType.WORST),
+            compat(TreeType.WILLOW, TreeType.BIRCH,          CompatibilityType.WORST),
+            // PINE — best: BONSAI, REDWOOD, BIRCH | worst: CHERRY_BLOSSOM, ASPEN
             compat(TreeType.PINE, TreeType.BONSAI,         CompatibilityType.BEST),
             compat(TreeType.PINE, TreeType.REDWOOD,        CompatibilityType.BEST),
             compat(TreeType.PINE, TreeType.BIRCH,          CompatibilityType.BEST),
-            compat(TreeType.PINE, TreeType.ASPEN,          CompatibilityType.WORST),
             compat(TreeType.PINE, TreeType.CHERRY_BLOSSOM, CompatibilityType.WORST),
-            // BIRCH
+            compat(TreeType.PINE, TreeType.ASPEN,          CompatibilityType.WORST),
+            // BIRCH — best: MAPLE, ASPEN, PINE | worst: REDWOOD, WILLOW
             compat(TreeType.BIRCH, TreeType.MAPLE,   CompatibilityType.BEST),
             compat(TreeType.BIRCH, TreeType.ASPEN,   CompatibilityType.BEST),
             compat(TreeType.BIRCH, TreeType.PINE,    CompatibilityType.BEST),
             compat(TreeType.BIRCH, TreeType.REDWOOD, CompatibilityType.WORST),
-            compat(TreeType.BIRCH, TreeType.OAK,     CompatibilityType.WORST),
-            // REDWOOD
-            compat(TreeType.REDWOOD, TreeType.OAK,           CompatibilityType.BEST),
-            compat(TreeType.REDWOOD, TreeType.CEDAR,         CompatibilityType.BEST),
-            compat(TreeType.REDWOOD, TreeType.PINE,          CompatibilityType.BEST),
-            compat(TreeType.REDWOOD, TreeType.ASPEN,         CompatibilityType.WORST),
-            compat(TreeType.REDWOOD, TreeType.CHERRY_BLOSSOM, CompatibilityType.WORST),
-            // CHERRY_BLOSSOM
+            compat(TreeType.BIRCH, TreeType.WILLOW,  CompatibilityType.WORST),
+            // REDWOOD — best: OAK, CEDAR, PINE | worst: BIRCH, WILLOW
+            compat(TreeType.REDWOOD, TreeType.OAK,    CompatibilityType.BEST),
+            compat(TreeType.REDWOOD, TreeType.CEDAR,  CompatibilityType.BEST),
+            compat(TreeType.REDWOOD, TreeType.PINE,   CompatibilityType.BEST),
+            compat(TreeType.REDWOOD, TreeType.BIRCH,  CompatibilityType.WORST),
+            compat(TreeType.REDWOOD, TreeType.WILLOW, CompatibilityType.WORST),
+            // CHERRY_BLOSSOM — best: WILLOW, MAPLE, ASPEN | worst: OAK, PINE
             compat(TreeType.CHERRY_BLOSSOM, TreeType.WILLOW, CompatibilityType.BEST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.MAPLE,  CompatibilityType.BEST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.ASPEN,  CompatibilityType.BEST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.OAK,    CompatibilityType.WORST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.PINE,   CompatibilityType.WORST),
-            // CEDAR
+            // CEDAR — best: OAK, WILLOW, REDWOOD | worst: MAPLE, BONSAI
             compat(TreeType.CEDAR, TreeType.OAK,    CompatibilityType.BEST),
             compat(TreeType.CEDAR, TreeType.WILLOW,  CompatibilityType.BEST),
             compat(TreeType.CEDAR, TreeType.REDWOOD, CompatibilityType.BEST),
-            compat(TreeType.CEDAR, TreeType.ASPEN,   CompatibilityType.WORST),
+            compat(TreeType.CEDAR, TreeType.MAPLE,   CompatibilityType.WORST),
             compat(TreeType.CEDAR, TreeType.BONSAI,  CompatibilityType.WORST),
-            // ASPEN
+            // ASPEN — best: MAPLE, CHERRY_BLOSSOM, BIRCH | worst: OAK, PINE
             compat(TreeType.ASPEN, TreeType.MAPLE,          CompatibilityType.BEST),
             compat(TreeType.ASPEN, TreeType.CHERRY_BLOSSOM, CompatibilityType.BEST),
             compat(TreeType.ASPEN, TreeType.BIRCH,          CompatibilityType.BEST),
             compat(TreeType.ASPEN, TreeType.OAK,            CompatibilityType.WORST),
-            compat(TreeType.ASPEN, TreeType.REDWOOD,        CompatibilityType.WORST),
-            // BONSAI
-            compat(TreeType.BONSAI, TreeType.PINE,    CompatibilityType.BEST),
-            compat(TreeType.BONSAI, TreeType.WILLOW,  CompatibilityType.BEST),
-            compat(TreeType.BONSAI, TreeType.REDWOOD, CompatibilityType.BEST),
-            compat(TreeType.BONSAI, TreeType.ASPEN,   CompatibilityType.WORST),
-            compat(TreeType.BONSAI, TreeType.MAPLE,   CompatibilityType.WORST)
+            compat(TreeType.ASPEN, TreeType.PINE,           CompatibilityType.WORST),
+            // BONSAI — best: PINE, WILLOW, OAK | worst: MAPLE, CEDAR
+            compat(TreeType.BONSAI, TreeType.PINE,   CompatibilityType.BEST),
+            compat(TreeType.BONSAI, TreeType.WILLOW, CompatibilityType.BEST),
+            compat(TreeType.BONSAI, TreeType.OAK,    CompatibilityType.BEST),
+            compat(TreeType.BONSAI, TreeType.MAPLE,  CompatibilityType.WORST),
+            compat(TreeType.BONSAI, TreeType.CEDAR,  CompatibilityType.WORST)
         ));
     }
 

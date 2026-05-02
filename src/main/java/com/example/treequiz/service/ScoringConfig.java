@@ -67,7 +67,7 @@ public class ScoringConfig {
 
         // Q5: A close friend is going through a hard time. You:
         map.put(5, Map.of(
-            "A", List.of(WILLOW, CEDAR, CHERRY_BLOSSOM),
+            "A", List.of(WILLOW, CEDAR, PINE),
             "B", List.of(OAK, BONSAI, REDWOOD),
             "C", List.of(MAPLE, ASPEN, BIRCH),
             "D", List.of(CEDAR, OAK, WILLOW)
@@ -92,7 +92,7 @@ public class ScoringConfig {
         // Q8: Your ideal creative outlet is:
         map.put(8, Map.of(
             "A", List.of(WILLOW, CHERRY_BLOSSOM, BONSAI),
-            "B", List.of(OAK, BONSAI, CEDAR),
+            "B", List.of(BONSAI, CEDAR, OAK),
             "C", List.of(MAPLE, CHERRY_BLOSSOM, BIRCH),
             "D", List.of(ASPEN, MAPLE, CHERRY_BLOSSOM)
         ));
@@ -126,7 +126,7 @@ public class ScoringConfig {
             "A", List.of(OAK, CEDAR, PINE),
             "B", List.of(BIRCH, ASPEN, MAPLE),
             "C", List.of(BONSAI, WILLOW, REDWOOD),
-            "D", List.of(BIRCH, MAPLE, ASPEN)
+            "D", List.of(MAPLE, CEDAR, ASPEN)
         ));
 
         // Q13: When someone needs help, you:
@@ -172,7 +172,7 @@ public class ScoringConfig {
         // Q18: When you look back on your life, you most want to have:
         map.put(18, Map.of(
             "A", List.of(OAK, REDWOOD, CEDAR),
-            "B", List.of(CHERRY_BLOSSOM, WILLOW, CEDAR),
+            "B", List.of(CHERRY_BLOSSOM, WILLOW, ASPEN),
             "C", List.of(BIRCH, ASPEN, MAPLE),
             "D", List.of(PINE, BONSAI, WILLOW)
         ));
@@ -189,7 +189,7 @@ public class ScoringConfig {
         map.put(20, Map.of(
             "A", List.of(REDWOOD, OAK, PINE),
             "B", List.of(CHERRY_BLOSSOM, MAPLE, BIRCH),
-            "C", List.of(WILLOW, BONSAI, CEDAR),
+            "C", List.of(WILLOW, PINE, CEDAR),
             "D", List.of(ASPEN, BIRCH, MAPLE)
         ));
 
