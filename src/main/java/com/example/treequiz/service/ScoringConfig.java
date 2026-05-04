@@ -1,14 +1,23 @@
 package com.example.treequiz.service;
 
-import com.example.treequiz.entity.enums.TreeType;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.treequiz.entity.enums.TreeType.*;
+import org.springframework.stereotype.Component;
+
+import com.example.treequiz.entity.enums.TreeType;
+import static com.example.treequiz.entity.enums.TreeType.ASPEN;
+import static com.example.treequiz.entity.enums.TreeType.BIRCH;
+import static com.example.treequiz.entity.enums.TreeType.BONSAI;
+import static com.example.treequiz.entity.enums.TreeType.CEDAR;
+import static com.example.treequiz.entity.enums.TreeType.CHERRY_BLOSSOM;
+import static com.example.treequiz.entity.enums.TreeType.MAPLE;
+import static com.example.treequiz.entity.enums.TreeType.OAK;
+import static com.example.treequiz.entity.enums.TreeType.PINE;
+import static com.example.treequiz.entity.enums.TreeType.REDWOOD;
+import static com.example.treequiz.entity.enums.TreeType.WILLOW;
 
 /**
  * Maps each quiz answer (by question order index + option label) to the tree types it scores.
@@ -51,7 +60,7 @@ public class ScoringConfig {
 
         // Q3: Which environment feels most like home to you?
         map.put(3, Map.of(
-            "A", List.of(BONSAI, OAK, CEDAR),
+            "A", List.of(BONSAI, CEDAR, REDWOOD),
             "B", List.of(MAPLE, CHERRY_BLOSSOM, ASPEN),
             "C", List.of(PINE, WILLOW, REDWOOD),
             "D", List.of(ASPEN, BIRCH, MAPLE)
@@ -62,7 +71,7 @@ public class ScoringConfig {
             "A", List.of(CEDAR, REDWOOD, OAK),
             "B", List.of(MAPLE, CHERRY_BLOSSOM, WILLOW),
             "C", List.of(PINE, BONSAI, WILLOW),
-            "D", List.of(OAK, BIRCH, ASPEN)
+            "D", List.of(OAK, CEDAR, REDWOOD)
         ));
 
         // Q5: A close friend is going through a hard time. You:
@@ -86,13 +95,13 @@ public class ScoringConfig {
             "A", List.of(BONSAI, OAK, REDWOOD),
             "B", List.of(BIRCH, ASPEN, MAPLE),
             "C", List.of(WILLOW, REDWOOD, BONSAI),
-            "D", List.of(MAPLE, CEDAR, ASPEN)
+            "D", List.of(MAPLE, BIRCH, ASPEN)
         ));
 
         // Q8: Your ideal creative outlet is:
         map.put(8, Map.of(
             "A", List.of(WILLOW, CHERRY_BLOSSOM, BONSAI),
-            "B", List.of(BONSAI, CEDAR, OAK),
+            "B", List.of(BONSAI, MAPLE, OAK),
             "C", List.of(MAPLE, CHERRY_BLOSSOM, BIRCH),
             "D", List.of(ASPEN, MAPLE, CHERRY_BLOSSOM)
         ));
@@ -102,7 +111,7 @@ public class ScoringConfig {
             "A", List.of(OAK, BONSAI, CEDAR),
             "B", List.of(ASPEN, BIRCH, MAPLE),
             "C", List.of(REDWOOD, PINE, CEDAR),
-            "D", List.of(WILLOW, CEDAR, MAPLE)
+            "D", List.of(CEDAR, WILLOW, MAPLE)
         ));
 
         // Q10: What motivates you most?
@@ -132,7 +141,7 @@ public class ScoringConfig {
         // Q13: When someone needs help, you:
         map.put(13, Map.of(
             "A", List.of(CEDAR, OAK, WILLOW),
-            "B", List.of(BONSAI, REDWOOD, OAK),
+            "B", List.of(OAK, CEDAR, BONSAI),
             "C", List.of(MAPLE, CHERRY_BLOSSOM, ASPEN),
             "D", List.of(PINE, WILLOW, CEDAR)
         ));
@@ -142,7 +151,7 @@ public class ScoringConfig {
             "A", List.of(BONSAI, REDWOOD, PINE),
             "B", List.of(ASPEN, MAPLE, CHERRY_BLOSSOM),
             "C", List.of(CHERRY_BLOSSOM, WILLOW, MAPLE),
-            "D", List.of(OAK, CEDAR, REDWOOD)
+            "D", List.of(REDWOOD, OAK, BONSAI)
         ));
 
         // Q15: How do you approach personal goals?
@@ -157,7 +166,7 @@ public class ScoringConfig {
         map.put(16, Map.of(
             "A", List.of(OAK, CEDAR, PINE),
             "B", List.of(ASPEN, MAPLE, CHERRY_BLOSSOM),
-            "C", List.of(REDWOOD, WILLOW, BONSAI),
+            "C", List.of(REDWOOD, CEDAR, WILLOW),
             "D", List.of(BIRCH, MAPLE, ASPEN)
         ));
 
@@ -181,7 +190,7 @@ public class ScoringConfig {
         map.put(19, Map.of(
             "A", List.of(OAK, BONSAI, CEDAR),
             "B", List.of(MAPLE, BIRCH, CHERRY_BLOSSOM),
-            "C", List.of(ASPEN, CEDAR, MAPLE),
+            "C", List.of(CEDAR, ASPEN, MAPLE),
             "D", List.of(REDWOOD, PINE, BONSAI)
         ));
 
@@ -191,6 +200,86 @@ public class ScoringConfig {
             "B", List.of(CHERRY_BLOSSOM, MAPLE, BIRCH),
             "C", List.of(WILLOW, PINE, CEDAR),
             "D", List.of(ASPEN, BIRCH, MAPLE)
+        ));
+
+        // Q21: When you join a new group, what do you naturally do?
+        map.put(21, Map.of(
+            "A", List.of(BONSAI, REDWOOD, PINE),
+            "B", List.of(CEDAR, OAK, PINE),
+            "C", List.of(ASPEN, MAPLE, CHERRY_BLOSSOM),
+            "D", List.of(CHERRY_BLOSSOM, WILLOW, BIRCH)
+        ));
+
+        // Q22: Which personal strength feels most natural to you?
+        map.put(22, Map.of(
+            "A", List.of(CEDAR, REDWOOD, OAK),
+            "B", List.of(CHERRY_BLOSSOM, WILLOW, BIRCH),
+            "C", List.of(WILLOW, CEDAR, BONSAI),
+            "D", List.of(BONSAI, PINE, REDWOOD)
+        ));
+
+        // Q23: When plans suddenly change, you usually...
+        map.put(23, Map.of(
+            "A", List.of(BIRCH, ASPEN, MAPLE),
+            "B", List.of(CEDAR, PINE, OAK),
+            "C", List.of(WILLOW, PINE, BONSAI),
+            "D", List.of(BONSAI, REDWOOD, PINE)
+        ));
+
+        // Q24: What kind of work feels most satisfying?
+        map.put(24, Map.of(
+            "A", List.of(REDWOOD, OAK, CEDAR),
+            "B", List.of(MAPLE, CHERRY_BLOSSOM, WILLOW),
+            "C", List.of(CEDAR, WILLOW, OAK),
+            "D", List.of(BONSAI, PINE, REDWOOD)
+        ));
+
+        // Q25: What frustrates you most?
+        map.put(25, Map.of(
+            "A", List.of(OAK, CEDAR, REDWOOD),
+            "B", List.of(MAPLE, BIRCH, ASPEN),
+            "C", List.of(WILLOW, CHERRY_BLOSSOM, CEDAR),
+            "D", List.of(BONSAI, PINE, OAK)
+        ));
+
+        // Q26: Which role do you play during difficult times?
+        map.put(26, Map.of(
+            "A", List.of(CEDAR, OAK, PINE),
+            "B", List.of(CHERRY_BLOSSOM, MAPLE, ASPEN),
+            "C", List.of(WILLOW, CEDAR, CHERRY_BLOSSOM),
+            "D", List.of(BONSAI, PINE, REDWOOD)
+        ));
+
+        // Q27: How would you rather spend a quiet evening?
+        map.put(27, Map.of(
+            "A", List.of(OAK, BONSAI, CEDAR),
+            "B", List.of(CHERRY_BLOSSOM, MAPLE, WILLOW),
+            "C", List.of(WILLOW, PINE, BONSAI),
+            "D", List.of(BIRCH, BONSAI, PINE)
+        ));
+
+        // Q28: What kind of compliment feels most accurate?
+        map.put(28, Map.of(
+            "A", List.of(OAK, CEDAR, PINE),
+            "B", List.of(MAPLE, ASPEN, CHERRY_BLOSSOM),
+            "C", List.of(WILLOW, REDWOOD, BONSAI),
+            "D", List.of(BONSAI, REDWOOD, PINE)
+        ));
+
+        // Q29: When making an important life choice, you prioritize...
+        map.put(29, Map.of(
+            "A", List.of(OAK, CEDAR, PINE),
+            "B", List.of(BIRCH, ASPEN, MAPLE),
+            "C", List.of(WILLOW, CHERRY_BLOSSOM, ASPEN),
+            "D", List.of(REDWOOD, BONSAI, PINE)
+        ));
+
+        // Q30: Which image feels most like your growth?
+        map.put(30, Map.of(
+            "A", List.of(REDWOOD, OAK, CEDAR),
+            "B", List.of(MAPLE, BIRCH, ASPEN),
+            "C", List.of(WILLOW, PINE, BIRCH),
+            "D", List.of(BONSAI, PINE, REDWOOD)
         ));
 
         return Collections.unmodifiableMap(map);
