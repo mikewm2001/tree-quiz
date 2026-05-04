@@ -16,7 +16,7 @@
 
             <div class="quiz-header">
                 <h1>Discover Your Tree</h1>
-                <p class="quiz-intro">Answer all 20 questions as honestly as you can.
+                <p class="quiz-intro">Answer all 30 questions as honestly as you can.
                     There are no right or wrong answers — only your truth.</p>
             </div>
 
@@ -37,7 +37,7 @@
 
                     <div class="question-number">
                         Question <span th:text="${stat.index + 1}">1</span>
-                        <span class="question-total">/ 20</span>
+                        <span class="question-total">/ 30</span>
                     </div>
 
                     <h2 class="question-prompt" th:text="${question.prompt}">Prompt</h2>
@@ -78,7 +78,7 @@
 
 <script>
     document.getElementById('quizForm').addEventListener('submit', function (e) {
-        const totalQuestions = 20;
+        const totalQuestions = 30;
         const answered = new Set(
             [...document.querySelectorAll('input[type="radio"]:checked')]
                 .map(el => el.name)

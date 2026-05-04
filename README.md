@@ -2,7 +2,7 @@
 
 A tree-themed personality quiz web application built with Spring Boot and Thymeleaf.
 
-Answer 20 personality questions and discover which of 10 tree types best reflects who you are — along with your best and most challenging compatibility matches.
+Answer 30 personality questions and discover which of 10 tree types best reflects who you are — along with your best and most challenging compatibility matches.
 
 ---
 
@@ -22,7 +22,7 @@ Answer 20 personality questions and discover which of 10 tree types best reflect
 | Route           | Description                             |
 |-----------------|-----------------------------------------|
 | `GET /`         | Home page with hero section             |
-| `GET /quiz`     | 20-question personality quiz            |
+| `GET /quiz`     | 30-question personality quiz            |
 | `POST /quiz/submit` | Submit answers, redirect to result  |
 | `GET /result?tree=OAK` | Personality result page        |
 | `GET /trees`    | Directory of all 10 tree personalities  |
@@ -48,7 +48,7 @@ Answer 20 personality questions and discover which of 10 tree types best reflect
 
 ## Scoring
 
-Each of the 20 questions has 4 answer options. Each answer awards points to 2–3 tree types. The first tree in each mapping receives a **direct hit** used in tie-breaking.
+Each of the 30 questions has 4 answer options. Each answer awards points to 2–3 tree types. The first tree in each mapping receives a **direct hit** used in tie-breaking.
 
 **Tie-break order** (applied when scores are equal):
 1. Highest total points
@@ -136,7 +136,7 @@ spring.datasource.password=your_password
 
 The app starts on [http://localhost:8080](http://localhost:8080).
 
-On first startup, `DataInitializerService` automatically seeds all 10 tree personalities, compatibility records, and 20 quiz questions. Subsequent restarts skip seeding (idempotent check via `count() == 0`).
+On first startup, `DataInitializerService` automatically seeds all 10 tree personalities, compatibility records, and 30 quiz questions. Subsequent restarts skip seeding (idempotent check via `count() == 0`).
 
 ---
 

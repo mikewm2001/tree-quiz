@@ -49,6 +49,11 @@ public class DataInitializerService implements ApplicationRunner {
             seedQuestions();
             log.info("Quiz questions seeded.");
         }
+        if (questionRepository.count() < 30) {
+            log.info("Seeding extended quiz questions (21–30)...");
+            seedExtendedQuestions();
+            log.info("Extended quiz questions seeded.");
+        }
     }
 
     // ------------------------------------------------------------------
@@ -415,6 +420,91 @@ public class DataInitializerService implements ApplicationRunner {
         ));
 
         return q;
+    }
+
+    private void seedExtendedQuestions() {
+        questionRepository.saveAll(List.of(
+
+            question(21,
+                "When you join a new group, what do you naturally do?",
+                "A", "Quietly observe and understand the dynamics first",
+                "B", "Help organise things so everyone feels grounded",
+                "C", "Bring energy and get people talking",
+                "D", "Look for ways to make the experience more meaningful"
+            ),
+
+            question(22,
+                "Which personal strength feels most natural to you?",
+                "A", "Staying steady when others feel uncertain",
+                "B", "Seeing beauty and possibility in ordinary things",
+                "C", "Understanding subtle emotions in yourself and others",
+                "D", "Refining details until something feels just right"
+            ),
+
+            question(23,
+                "When plans suddenly change, you usually...",
+                "A", "Adapt quickly and make the best of the new situation",
+                "B", "Stay calm and rebuild the plan from scratch",
+                "C", "Need a little time to process the emotional shift",
+                "D", "Step back and choose the most intentional next move"
+            ),
+
+            question(24,
+                "What kind of work feels most satisfying?",
+                "A", "Work that creates something lasting and meaningful",
+                "B", "Work that lets you express your creativity freely",
+                "C", "Work that directly helps or comforts other people",
+                "D", "Work that demands precision and thoughtful design"
+            ),
+
+            question(25,
+                "What frustrates you most?",
+                "A", "People who are unreliable or inconsistent",
+                "B", "Feeling boxed in or creatively limited",
+                "C", "Being misunderstood or not heard emotionally",
+                "D", "Careless decisions made without proper reflection"
+            ),
+
+            question(26,
+                "Which role do you naturally play during difficult times?",
+                "A", "The anchor who keeps everyone steady",
+                "B", "The encourager who lifts the mood",
+                "C", "The listener who helps people feel seen",
+                "D", "The quiet problem-solver who thinks deeply"
+            ),
+
+            question(27,
+                "How would you rather spend a quiet evening?",
+                "A", "Planning goals or working on something useful",
+                "B", "Creating, cooking, decorating, or making something beautiful",
+                "C", "Journalling, reflecting, or listening to calming music",
+                "D", "Reading, learning, or practising a skill"
+            ),
+
+            question(28,
+                "What kind of compliment feels most accurate?",
+                "A", "\"You are reliable when it matters.\"",
+                "B", "\"You bring warmth and life into a room.\"",
+                "C", "\"You understand people deeply.\"",
+                "D", "\"You think with rare care and intention.\""
+            ),
+
+            question(29,
+                "When making an important life choice, you prioritise...",
+                "A", "Security and long-term stability",
+                "B", "Excitement, growth, and new experiences",
+                "C", "Emotional alignment and personal meaning",
+                "D", "Clarity, purpose, and careful reasoning"
+            ),
+
+            question(30,
+                "Which image feels most like your own growth?",
+                "A", "Strong roots spreading deeper each year",
+                "B", "Bright leaves changing boldly with every season",
+                "C", "Branches bending gently but never breaking",
+                "D", "A carefully shaped form refined slowly over time"
+            )
+        ));
     }
 
     private AnswerOption option(Question question, String label, String text) {
