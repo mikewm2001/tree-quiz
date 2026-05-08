@@ -153,7 +153,7 @@ Every push to `main` triggers a GitHub Actions workflow that builds the applicat
 | Upload | JAR uploaded to S3 under `deployments/<sha>/` |
 | Release | New EB application version created, labeled with the Git SHA |
 | Deploy | `Treepersonalityquiz-env-3` updated to the new version |
-| Wait | Workflow blocks until EB reports `Ready` |
+| Wait | Workflow blocks until EB reports the environment update is complete |
 
 Workflow file: [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
 
@@ -165,9 +165,9 @@ Workflow file: [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
 
 2. **IAM role** — `GitHubActionsElasticBeanstalkDeployRole` (account `730335405205`) needs the following:
    - Trust policy allowing `token.actions.githubusercontent.com` with condition `repo:mikewm2001/tree-quiz:ref:refs/heads/main`
-   - Permissions: `elasticbeanstalk:CreateApplicationVersion`, `elasticbeanstalk:UpdateEnvironment`, `elasticbeanstalk:DescribeEnvironments`, `s3:PutObject`, `s3:GetObject` on the deploy bucket
+   - Permissions: current setup uses `AdministratorAccess-AWSElasticBeanstalk` and `AmazonS3FullAccess`. These can be tightened later to least-privilege permissions for Elastic Beanstalk deployment and S3 access to the Beanstalk deploy bucket.
 
-3. **S3 bucket** — create a bucket in `us-east-1` to hold deployment artifacts. The bucket name is referenced in the workflow as the `EB_DEPLOY_BUCKET` repository variable (see GitHub settings below).
+3. **S3 bucket** — use the existing Elastic Beanstalk service bucket in `us-east-1`: `elasticbeanstalk-us-east-1-730335405205`. The bucket name is referenced in the workflow as the `EB_DEPLOY_BUCKET` repository variable.
 
 ### GitHub repository settings
 
@@ -175,23 +175,32 @@ Under **Settings → Secrets and variables → Actions → Variables**, add:
 
 | Variable | Value |
 |----------|-------|
-| `EB_DEPLOY_BUCKET` | Name of the S3 bucket you created above |
+| `EB_DEPLOY_BUCKET` | `elasticbeanstalk-us-east-1-730335405205` |
 
 No repository secrets are needed — authentication is entirely OIDC-based.
 
 ### Manual deploy fallback
 
+Requires the AWS CLI to be configured locally with permissions to upload to S3 and update Elastic Beanstalk.
+
 ```bash
+VERSION_LABEL=manual-$(date +%Y%m%d%H%M%S)
+BUCKET=elasticbeanstalk-us-east-1-730335405205
+
 ./mvnw clean package -DskipTests
-aws s3 cp target/treequiz-0.0.1-SNAPSHOT.jar s3://<bucket>/deployments/manual/treequiz-0.0.1-SNAPSHOT.jar
+
+aws s3 cp target/treequiz-0.0.1-SNAPSHOT.jar \
+  s3://$BUCKET/deployments/manual/treequiz-0.0.1-SNAPSHOT.jar
+
 aws elasticbeanstalk create-application-version \
   --application-name treepersonalityquiz \
-  --version-label manual-$(date +%Y%m%d%H%M%S) \
-  --source-bundle S3Bucket=<bucket>,S3Key=deployments/manual/treequiz-0.0.1-SNAPSHOT.jar
+  --version-label $VERSION_LABEL \
+  --source-bundle S3Bucket=$BUCKET,S3Key=deployments/manual/treequiz-0.0.1-SNAPSHOT.jar
+
 aws elasticbeanstalk update-environment \
   --application-name treepersonalityquiz \
   --environment-name Treepersonalityquiz-env-3 \
-  --version-label manual-$(date +%Y%m%d%H%M%S)
+  --version-label $VERSION_LABEL
 ```
 
 ### Rollback
@@ -210,7 +219,7 @@ aws elasticbeanstalk update-environment \
 1. Push a trivial change (e.g., a README edit) to `main` and watch the **Actions** tab.
 2. Confirm the workflow reaches the "Wait" step without error.
 3. Check the EB environment health in the AWS Console after the workflow completes.
-4. If the deployment fails mid-way, EB keeps the previous version running — rollback is automatic at the EB level.
+4. If deployment fails, check the EB events/logs and redeploy a previous application version from the Elastic Beanstalk console.
 
 ---
 
