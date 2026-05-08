@@ -140,6 +140,80 @@ On first startup, `DataInitializerService` automatically seeds all 10 tree perso
 
 ---
 
+## CI/CD
+
+Every push to `main` triggers a GitHub Actions workflow that builds the application and deploys it to AWS Elastic Beanstalk.
+
+### Workflow summary
+
+| Step | Action |
+|------|--------|
+| Build | `./mvnw clean package -DskipTests` |
+| Auth | OIDC — no stored AWS credentials |
+| Upload | JAR uploaded to S3 under `deployments/<sha>/` |
+| Release | New EB application version created, labeled with the Git SHA |
+| Deploy | `Treepersonalityquiz-env-3` updated to the new version |
+| Wait | Workflow blocks until EB reports `Ready` |
+
+Workflow file: [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
+
+### AWS-side setup (one-time)
+
+1. **OIDC identity provider** — add GitHub's OIDC provider to IAM:
+   - Provider URL: `https://token.actions.githubusercontent.com`
+   - Audience: `sts.amazonaws.com`
+
+2. **IAM role** — `GitHubActionsElasticBeanstalkDeployRole` (account `730335405205`) needs the following:
+   - Trust policy allowing `token.actions.githubusercontent.com` with condition `repo:mikewm2001/tree-quiz:ref:refs/heads/main`
+   - Permissions: `elasticbeanstalk:CreateApplicationVersion`, `elasticbeanstalk:UpdateEnvironment`, `elasticbeanstalk:DescribeEnvironments`, `s3:PutObject`, `s3:GetObject` on the deploy bucket
+
+3. **S3 bucket** — create a bucket in `us-east-1` to hold deployment artifacts. The bucket name is referenced in the workflow as the `EB_DEPLOY_BUCKET` repository variable (see GitHub settings below).
+
+### GitHub repository settings
+
+Under **Settings → Secrets and variables → Actions → Variables**, add:
+
+| Variable | Value |
+|----------|-------|
+| `EB_DEPLOY_BUCKET` | Name of the S3 bucket you created above |
+
+No repository secrets are needed — authentication is entirely OIDC-based.
+
+### Manual deploy fallback
+
+```bash
+./mvnw clean package -DskipTests
+aws s3 cp target/treequiz-0.0.1-SNAPSHOT.jar s3://<bucket>/deployments/manual/treequiz-0.0.1-SNAPSHOT.jar
+aws elasticbeanstalk create-application-version \
+  --application-name treepersonalityquiz \
+  --version-label manual-$(date +%Y%m%d%H%M%S) \
+  --source-bundle S3Bucket=<bucket>,S3Key=deployments/manual/treequiz-0.0.1-SNAPSHOT.jar
+aws elasticbeanstalk update-environment \
+  --application-name treepersonalityquiz \
+  --environment-name Treepersonalityquiz-env-3 \
+  --version-label manual-$(date +%Y%m%d%H%M%S)
+```
+
+### Rollback
+
+In the AWS Console, go to **Elastic Beanstalk → treepersonalityquiz → Application versions**, select any previous version, and choose **Deploy**. Or via CLI:
+
+```bash
+aws elasticbeanstalk update-environment \
+  --application-name treepersonalityquiz \
+  --environment-name Treepersonalityquiz-env-3 \
+  --version-label <previous-git-sha>
+```
+
+### Testing the workflow safely
+
+1. Push a trivial change (e.g., a README edit) to `main` and watch the **Actions** tab.
+2. Confirm the workflow reaches the "Wait" step without error.
+3. Check the EB environment health in the AWS Console after the workflow completes.
+4. If the deployment fails mid-way, EB keeps the previous version running — rollback is automatic at the EB level.
+
+---
+
 ## Modifying Quiz Content
 
 **Questions / answers** — edit the `seedQuestions()` method in `DataInitializerService.java`.
