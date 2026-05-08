@@ -52,8 +52,7 @@ jobs:
           aws elasticbeanstalk create-application-version \
             --application-name ${{ env.EB_APP_NAME }} \
             --version-label ${{ github.sha }} \
-            --source-bundle S3Bucket=${{ vars.EB_DEPLOY_BUCKET }},S3Key=deployments/${{ github.sha }}/${{ env.JAR_NAME }} \
-            --auto-create-application false
+            --source-bundle S3Bucket=${{ vars.EB_DEPLOY_BUCKET }},S3Key=deployments/${{ github.sha }}/${{ env.JAR_NAME }}
 
       - name: Deploy to Elastic Beanstalk
         run: |
