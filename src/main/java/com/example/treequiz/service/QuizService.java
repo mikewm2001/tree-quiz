@@ -22,7 +22,7 @@ public class QuizService {
      * Applied only when total points and direct hits are both tied.
      */
     private static final List<TreeType> TIE_BREAK_PRIORITY = List.of(
-        REDWOOD, OAK, CEDAR, BONSAI, PINE, MAPLE, WILLOW, BIRCH, CHERRY_BLOSSOM, ASPEN
+        REDWOOD, OAK, MAPLE, CEDAR, ASPEN, BONSAI, CHERRY_BLOSSOM, PINE, WILLOW, BIRCH
     );
 
     private final QuestionRepository questionRepository;

@@ -35,13 +35,24 @@ public class DataInitializerService implements ApplicationRunner {
         if (treePersonalityRepository.count() == 0) {
             log.info("Seeding tree personality data...");
             seedTreePersonalities();
-            seedTreeCompatibilities();
             log.info("Tree personality data seeded.");
         }
+
+        long deleted = treeCompatibilityRepository.count();
+        treeCompatibilityRepository.deleteAllInBatch();
+        seedTreeCompatibilities();
+        long created = treeCompatibilityRepository.count();
+        log.info("Compatibility mappings refreshed: {} deleted, {} recreated.", deleted, created);
+
         if (questionRepository.count() == 0) {
             log.info("Seeding quiz questions...");
             seedQuestions();
             log.info("Quiz questions seeded.");
+        }
+        if (questionRepository.count() < 30) {
+            log.info("Seeding extended quiz questions (21–30)...");
+            seedExtendedQuestions();
+            log.info("Extended quiz questions seeded.");
         }
     }
 
@@ -150,66 +161,66 @@ public class DataInitializerService implements ApplicationRunner {
 
     private void seedTreeCompatibilities() {
         treeCompatibilityRepository.saveAll(List.of(
-            // OAK
+            // OAK — best: CEDAR, REDWOOD, BONSAI | worst: ASPEN, CHERRY_BLOSSOM
             compat(TreeType.OAK, TreeType.CEDAR,          CompatibilityType.BEST),
             compat(TreeType.OAK, TreeType.REDWOOD,        CompatibilityType.BEST),
-            compat(TreeType.OAK, TreeType.MAPLE,          CompatibilityType.BEST),
+            compat(TreeType.OAK, TreeType.BONSAI,         CompatibilityType.BEST),
             compat(TreeType.OAK, TreeType.ASPEN,          CompatibilityType.WORST),
             compat(TreeType.OAK, TreeType.CHERRY_BLOSSOM, CompatibilityType.WORST),
-            // MAPLE
+            // MAPLE — best: ASPEN, CHERRY_BLOSSOM, BIRCH | worst: BONSAI, CEDAR
             compat(TreeType.MAPLE, TreeType.ASPEN,          CompatibilityType.BEST),
             compat(TreeType.MAPLE, TreeType.CHERRY_BLOSSOM, CompatibilityType.BEST),
             compat(TreeType.MAPLE, TreeType.BIRCH,          CompatibilityType.BEST),
             compat(TreeType.MAPLE, TreeType.BONSAI,         CompatibilityType.WORST),
-            compat(TreeType.MAPLE, TreeType.REDWOOD,        CompatibilityType.WORST),
-            // WILLOW
+            compat(TreeType.MAPLE, TreeType.CEDAR,          CompatibilityType.WORST),
+            // WILLOW — best: CHERRY_BLOSSOM, CEDAR, BONSAI | worst: REDWOOD, BIRCH
             compat(TreeType.WILLOW, TreeType.CHERRY_BLOSSOM, CompatibilityType.BEST),
             compat(TreeType.WILLOW, TreeType.CEDAR,          CompatibilityType.BEST),
             compat(TreeType.WILLOW, TreeType.BONSAI,         CompatibilityType.BEST),
-            compat(TreeType.WILLOW, TreeType.ASPEN,          CompatibilityType.WORST),
-            compat(TreeType.WILLOW, TreeType.OAK,            CompatibilityType.WORST),
-            // PINE
+            compat(TreeType.WILLOW, TreeType.REDWOOD,        CompatibilityType.WORST),
+            compat(TreeType.WILLOW, TreeType.BIRCH,          CompatibilityType.WORST),
+            // PINE — best: BONSAI, REDWOOD, BIRCH | worst: CHERRY_BLOSSOM, ASPEN
             compat(TreeType.PINE, TreeType.BONSAI,         CompatibilityType.BEST),
             compat(TreeType.PINE, TreeType.REDWOOD,        CompatibilityType.BEST),
             compat(TreeType.PINE, TreeType.BIRCH,          CompatibilityType.BEST),
-            compat(TreeType.PINE, TreeType.ASPEN,          CompatibilityType.WORST),
             compat(TreeType.PINE, TreeType.CHERRY_BLOSSOM, CompatibilityType.WORST),
-            // BIRCH
+            compat(TreeType.PINE, TreeType.ASPEN,          CompatibilityType.WORST),
+            // BIRCH — best: MAPLE, ASPEN, PINE | worst: REDWOOD, WILLOW
             compat(TreeType.BIRCH, TreeType.MAPLE,   CompatibilityType.BEST),
             compat(TreeType.BIRCH, TreeType.ASPEN,   CompatibilityType.BEST),
             compat(TreeType.BIRCH, TreeType.PINE,    CompatibilityType.BEST),
             compat(TreeType.BIRCH, TreeType.REDWOOD, CompatibilityType.WORST),
-            compat(TreeType.BIRCH, TreeType.OAK,     CompatibilityType.WORST),
-            // REDWOOD
-            compat(TreeType.REDWOOD, TreeType.OAK,           CompatibilityType.BEST),
-            compat(TreeType.REDWOOD, TreeType.CEDAR,         CompatibilityType.BEST),
-            compat(TreeType.REDWOOD, TreeType.PINE,          CompatibilityType.BEST),
-            compat(TreeType.REDWOOD, TreeType.ASPEN,         CompatibilityType.WORST),
-            compat(TreeType.REDWOOD, TreeType.CHERRY_BLOSSOM, CompatibilityType.WORST),
-            // CHERRY_BLOSSOM
+            compat(TreeType.BIRCH, TreeType.WILLOW,  CompatibilityType.WORST),
+            // REDWOOD — best: OAK, CEDAR, PINE | worst: BIRCH, WILLOW
+            compat(TreeType.REDWOOD, TreeType.OAK,    CompatibilityType.BEST),
+            compat(TreeType.REDWOOD, TreeType.CEDAR,  CompatibilityType.BEST),
+            compat(TreeType.REDWOOD, TreeType.PINE,   CompatibilityType.BEST),
+            compat(TreeType.REDWOOD, TreeType.BIRCH,  CompatibilityType.WORST),
+            compat(TreeType.REDWOOD, TreeType.WILLOW, CompatibilityType.WORST),
+            // CHERRY_BLOSSOM — best: WILLOW, MAPLE, ASPEN | worst: OAK, PINE
             compat(TreeType.CHERRY_BLOSSOM, TreeType.WILLOW, CompatibilityType.BEST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.MAPLE,  CompatibilityType.BEST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.ASPEN,  CompatibilityType.BEST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.OAK,    CompatibilityType.WORST),
             compat(TreeType.CHERRY_BLOSSOM, TreeType.PINE,   CompatibilityType.WORST),
-            // CEDAR
+            // CEDAR — best: OAK, WILLOW, REDWOOD | worst: MAPLE, BONSAI
             compat(TreeType.CEDAR, TreeType.OAK,    CompatibilityType.BEST),
             compat(TreeType.CEDAR, TreeType.WILLOW,  CompatibilityType.BEST),
             compat(TreeType.CEDAR, TreeType.REDWOOD, CompatibilityType.BEST),
-            compat(TreeType.CEDAR, TreeType.ASPEN,   CompatibilityType.WORST),
+            compat(TreeType.CEDAR, TreeType.MAPLE,   CompatibilityType.WORST),
             compat(TreeType.CEDAR, TreeType.BONSAI,  CompatibilityType.WORST),
-            // ASPEN
+            // ASPEN — best: MAPLE, CHERRY_BLOSSOM, BIRCH | worst: OAK, PINE
             compat(TreeType.ASPEN, TreeType.MAPLE,          CompatibilityType.BEST),
             compat(TreeType.ASPEN, TreeType.CHERRY_BLOSSOM, CompatibilityType.BEST),
             compat(TreeType.ASPEN, TreeType.BIRCH,          CompatibilityType.BEST),
             compat(TreeType.ASPEN, TreeType.OAK,            CompatibilityType.WORST),
-            compat(TreeType.ASPEN, TreeType.REDWOOD,        CompatibilityType.WORST),
-            // BONSAI
-            compat(TreeType.BONSAI, TreeType.PINE,    CompatibilityType.BEST),
-            compat(TreeType.BONSAI, TreeType.WILLOW,  CompatibilityType.BEST),
-            compat(TreeType.BONSAI, TreeType.REDWOOD, CompatibilityType.BEST),
-            compat(TreeType.BONSAI, TreeType.ASPEN,   CompatibilityType.WORST),
-            compat(TreeType.BONSAI, TreeType.MAPLE,   CompatibilityType.WORST)
+            compat(TreeType.ASPEN, TreeType.PINE,           CompatibilityType.WORST),
+            // BONSAI — best: PINE, WILLOW, OAK | worst: MAPLE, CEDAR
+            compat(TreeType.BONSAI, TreeType.PINE,   CompatibilityType.BEST),
+            compat(TreeType.BONSAI, TreeType.WILLOW, CompatibilityType.BEST),
+            compat(TreeType.BONSAI, TreeType.OAK,    CompatibilityType.BEST),
+            compat(TreeType.BONSAI, TreeType.MAPLE,  CompatibilityType.WORST),
+            compat(TreeType.BONSAI, TreeType.CEDAR,  CompatibilityType.WORST)
         ));
     }
 
@@ -409,6 +420,91 @@ public class DataInitializerService implements ApplicationRunner {
         ));
 
         return q;
+    }
+
+    private void seedExtendedQuestions() {
+        questionRepository.saveAll(List.of(
+
+            question(21,
+                "When you join a new group, what do you naturally do?",
+                "A", "Quietly observe and understand the dynamics first",
+                "B", "Help organise things so everyone feels grounded",
+                "C", "Bring energy and get people talking",
+                "D", "Look for ways to make the experience more meaningful"
+            ),
+
+            question(22,
+                "Which personal strength feels most natural to you?",
+                "A", "Staying steady when others feel uncertain",
+                "B", "Seeing beauty and possibility in ordinary things",
+                "C", "Understanding subtle emotions in yourself and others",
+                "D", "Refining details until something feels just right"
+            ),
+
+            question(23,
+                "When plans suddenly change, you usually...",
+                "A", "Adapt quickly and make the best of the new situation",
+                "B", "Stay calm and rebuild the plan from scratch",
+                "C", "Need a little time to process the emotional shift",
+                "D", "Step back and choose the most intentional next move"
+            ),
+
+            question(24,
+                "What kind of work feels most satisfying?",
+                "A", "Work that creates something lasting and meaningful",
+                "B", "Work that lets you express your creativity freely",
+                "C", "Work that directly helps or comforts other people",
+                "D", "Work that demands precision and thoughtful design"
+            ),
+
+            question(25,
+                "What frustrates you most?",
+                "A", "People who are unreliable or inconsistent",
+                "B", "Feeling boxed in or creatively limited",
+                "C", "Being misunderstood or not heard emotionally",
+                "D", "Careless decisions made without proper reflection"
+            ),
+
+            question(26,
+                "Which role do you naturally play during difficult times?",
+                "A", "The anchor who keeps everyone steady",
+                "B", "The encourager who lifts the mood",
+                "C", "The listener who helps people feel seen",
+                "D", "The quiet problem-solver who thinks deeply"
+            ),
+
+            question(27,
+                "How would you rather spend a quiet evening?",
+                "A", "Planning goals or working on something useful",
+                "B", "Creating, cooking, decorating, or making something beautiful",
+                "C", "Journalling, reflecting, or listening to calming music",
+                "D", "Reading, learning, or practising a skill"
+            ),
+
+            question(28,
+                "What kind of compliment feels most accurate?",
+                "A", "\"You are reliable when it matters.\"",
+                "B", "\"You bring warmth and life into a room.\"",
+                "C", "\"You understand people deeply.\"",
+                "D", "\"You think with rare care and intention.\""
+            ),
+
+            question(29,
+                "When making an important life choice, you prioritise...",
+                "A", "Security and long-term stability",
+                "B", "Excitement, growth, and new experiences",
+                "C", "Emotional alignment and personal meaning",
+                "D", "Clarity, purpose, and careful reasoning"
+            ),
+
+            question(30,
+                "Which image feels most like your own growth?",
+                "A", "Strong roots spreading deeper each year",
+                "B", "Bright leaves changing boldly with every season",
+                "C", "Branches bending gently but never breaking",
+                "D", "A carefully shaped form refined slowly over time"
+            )
+        ));
     }
 
     private AnswerOption option(Question question, String label, String text) {
